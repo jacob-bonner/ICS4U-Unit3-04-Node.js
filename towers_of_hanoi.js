@@ -6,38 +6,21 @@
 const prompt = require('prompt-sync')({sigint: true});
 
 function solveTowers(diskNumber, fromRod, toRod, spareRod) {
-  if (diskNumber > 0) {
-    // Calling the solving function again
-    solveTowers(diskNumber - 1, fromRod, spareRod, toRod);
-
+  // Checking if there is a disk on every rod
+  if (diskNumber == 1) {
     // Moving the top disk from one rod to another
-    toRod.push(fromRod[fromRod.length - 1]);
-    fromRod.splice(fromRod.length - 1, 1);
-
-    // Printing the disks on rod A
-    let rodText = "Rod A: ";
-    for (let fromCounter = 0; fromCounter < fromRod.length; fromCounter++) {
-      rodText = rodText + fromRod[fromCounter] + ", ";
-    }
-    rodText = rodText + "     ";
-
-    // Printing the disks on rod B
-    rodText = rodText + "Rod B: ";
-    for (let toCounter = 0; toCounter < toRod.length; toCounter++) {
-      rodText = rodText + toRod[toCounter] + ", ";
-    }
-    rodText = rodText + "     ";
-
-    // Printing the disks on rod C
-    rodText = rodText + "Rod C: ";
-    for (let spareCounter = 0; spareCounter < spareRod.length; spareCounter++) {
-      rodText = rodText + spareRod[spareCounter] + ", ";
-    }
-    console.log(rodText);
-
-    // Calling the solving function again
-    solveTowers(diskNumber - 1, spareRod, toRod, fromRod);
+    console.log("Moving disk 1 from rod", fromRod, "to rod", toRod);
+    return;
   }
+
+  // Calling the solving function again
+  solveTowers(diskNumber - 1, fromRod, spareRod, toRod);
+
+  // Printing the move that was taken
+  console.log("Moving disk", diskNumber, "from rod", fromRod, "to rod", toRod);
+
+  // Calling the solving function again
+  solveTowers(diskNumber - 1, spareRod, toRod, fromRod);
 }
 
 try {
@@ -58,18 +41,8 @@ try {
     // Throwing that the user entered an input that was not an integer
     throw "ERROR: Invalid Input";
   } else {
-    // Initializing lists that will be used for the rods
-    const firstArray = [];
-    const secondArray = [];
-    const thirdArray = [];
-
-    // Adding numbers to one of the arrays to represent disks
-    for (let counter = 0; counter < userDisks; counter++) {
-      firstArray.push(userDisks - counter);
-    }
-
     // Calling the function that will solve the algorithm
-    solveTowers(userDisks, firstArray, secondArray, thirdArray);
+    solveTowers(userDisks, 'A', 'C', 'B');
   }
 
   // Printing that a solution was found
